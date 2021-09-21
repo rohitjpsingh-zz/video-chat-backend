@@ -35,10 +35,18 @@ io.on("connection", (socket) => {
 
 
   // Recieve Peer Signal Data When Accept Call
-  socket.on("answerCall", ({ userToCall, signalData, from, name }) => {
-    // Send Call User Data to Specific Client
-    console.log("answerCall:",userToCall,"name:",name);
-    
+  socket.on("answerCall", (data) => {
+    socket.broadcast.emit("updateUserMedia", {
+      type: data.type,
+      currentMediaStatus: data.myMediaStatus,
+    });
+    io.to(data.to).emit("callAccepted", data);
+  });
+
+  // Update Media
+  socket.on("updateMyMedia", ({ type, currentMediaStatus }) => {
+    console.log("updateMyMedia");
+    socket.broadcast.emit("updateUserMedia", { type, currentMediaStatus });
   });
 
 });
