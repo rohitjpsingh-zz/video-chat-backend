@@ -22,7 +22,7 @@ io.on("connection", (socket) => {
   // Send Socket Id to Client
   socket.emit("socketId", socket.id);
 
-  // Recieve Peer Signal Data When Call User
+  /*// Recieve Peer Signal Data When Call User
   socket.on("callUser", ({ userToCall, signalData, from, name }) => {
     // Send Call User Data to Specific Client
     console.log("callUser:",userToCall,"name:",name);
@@ -47,6 +47,15 @@ io.on("connection", (socket) => {
   socket.on("updateMyMedia", ({ type, currentMediaStatus }) => {
     console.log("updateMyMedia");
     socket.broadcast.emit("updateUserMedia", { type, currentMediaStatus });
+  });*/
+
+
+  socket.on("startJoin", (data)=>{
+    console.log("joiner:",JSON.stringify(data));
+    const {mainUserId,childUserId,childUserName,childUserSignal} = data;
+    socket.to(mainUserId).emit("incomingRequest", {
+      childUserId,childUserName,childUserSignal
+    });
   });
 
 });
